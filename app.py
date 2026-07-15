@@ -65,7 +65,7 @@ if uploaded is not None:
     col1, col2 = st.columns(2)
 
     with col1:
-        st.image(image, caption="Uploaded scan", use_container_width=True)
+        st.image(image, caption="Uploaded scan", width="stretch")
 
     x = preprocess(image)
     prob_tumor = float(model.predict(x, verbose=0)[0][0])
