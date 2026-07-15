@@ -26,10 +26,15 @@ results. See [Results](#results) below.
 ```text
 Task_09_Executable Code_Brain_MRI_Transfer_Learning/
 ├── Task_09_Executable Code_Brain_MRI_Transfer_Learning.ipynb   <- the lab notebook (run this)
+├── app.py                       <- Streamlit app serving both trained models
+├── runtime.txt                  <- pins Python 3.11 for Streamlit Cloud (TensorFlow support)
+├── feature_extraction_model.keras   <- saved model from Task 7 (used by app.py)
+├── finetuned_model.keras            <- saved model from Task 9 (used by app.py)
 ├── prepare_data.py              <- splits the real Kaggle data into train/test
 ├── generate_sample_data.py      <- makes fake data to test the pipeline first (optional)
 ├── requirements.txt
 ├── README.md
+├── .gitignore
 ├── venv/                        <- Python virtual environment (create via steps below)
 ├── brain_tumor_dataset/         <- raw Kaggle download, extracted (source for prepare_data.py)
 │   ├── yes/                     <- 155 tumour scans
@@ -168,6 +173,36 @@ afterwards to restore the clean real split.
 Fine-tuning **decreased** test accuracy by 5.88 points on this dataset - a real finding
 caused by overfitting on a small training set (202 images), discussed in full in Task 11
 of the notebook, including a confusion-matrix-based clinical read on tumour recall.
+
+---
+
+## Streamlit app
+
+Both trained models are also served through a small Streamlit app (`app.py`) with a
+sidebar model picker, image upload, and a prediction + confidence score.
+
+**Live app:** <https://brain-mri-transfer-learning-ml.streamlit.app>
+
+**Repo:** <https://github.com/karthickmk2001/brain-mri-transfer-learning>
+
+### Running it locally
+
+```bash
+streamlit run app.py
+```
+
+Then open <http://localhost:8501>.
+
+### Redeploying / updating on Streamlit Community Cloud
+
+1. Push changes to the `main` branch on GitHub - Streamlit Cloud auto-redeploys on push.
+2. If you change `requirements.txt` or `runtime.txt`, a plain push is not always enough -
+   Streamlit Cloud can reuse the already-provisioned environment. If the deploy logs show
+   stale dependency versions, use **Manage app -> Reboot app** first; if that still doesn't
+   pick up the change, fully **delete the app and redeploy it fresh** from share.streamlit.io
+   so the environment is reprovisioned from scratch.
+3. `runtime.txt` pins Python 3.11 - Streamlit Cloud's default (3.14 at time of writing) has
+   no TensorFlow wheels yet, which breaks dependency installation if left unpinned.
 
 ---
 
